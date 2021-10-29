@@ -3,7 +3,7 @@ const express = require("express");
 require("dotenv").config();
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const uri =
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.gzsrh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -18,6 +18,13 @@ async function run() {
     try {
         await client.connect()
         console.log('database connected');
+
+        //get api
+        app.get("/hotels", async (req, res) => {
+            const cursor = hotellist.find({});
+            const hotels = await cursor.toArray();
+            res.send(hotels);
+        });
     }
     finally {
         // await client.close()
